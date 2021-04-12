@@ -22,5 +22,17 @@ fn test_add_event() {
     assert_eq!(end.1, test_name);
     assert_eq!(end.2, EventType::End);
 
-    assert!((delta_time - time_sleep * 1000).abs() < 10000);
+    assert!((delta_time - time_sleep * 1000).abs() < 20000);
+}
+
+#[test]
+fn test_save_session() {
+    initialize_profiler();
+    unsafe { EVENTS.clear(); }
+
+    profiler_event("test_name", EventType::Begin);
+    std::thread::sleep(Duration::from_millis(1000 as u64));
+    profiler_event("test_name", EventType::End);
+
+    save_current_session();
 }

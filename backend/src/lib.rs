@@ -1,4 +1,7 @@
 use std::time::Instant;
+use chrono::{Datelike, Timelike};
+use std::fs::File;
+use std::io::Write;
 
 #[cfg(test)]
 mod tests;
@@ -6,24 +9,10 @@ mod tests;
 pub static mut START_TIME: Option<Instant> = None;
 pub static mut EVENTS: Vec<(u128, &'static str, EventType)> = Vec::new();
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum EventType {
     Begin,
     End,
-}
-
-impl PartialEq for EventType {
-    fn eq(&self, other: &Self) -> bool {
-        let a = match self {
-            EventType::Begin => 0,
-            EventType::End => 1,
-        };
-        let b = match other {
-            EventType::Begin => 0,
-            EventType::End => 1,
-        };
-        a == b
-    }
 }
 
 #[inline]
@@ -40,5 +29,25 @@ pub fn profiler_event(name: &'static str, event_type: EventType) {
 pub fn initialize_profiler() {
     unsafe {
         START_TIME = Some(Instant::now());
+    }
+}
+
+pub fn save_current_session() {
+    let now = chrono::Local::now();
+    let date_time = format!("{:02} {:02} {} - {:02}.{:02}.{:02}",
+                            now.day(), now.month(), now.year(),
+                            now.hour(), now.minute(), now.second());
+    let file_name = format!("uranium session [{}].ups", date_time);
+
+    let mut file = File::create(file_name)
+        .expect("An error creating new file");
+    for event in unsafe { &EVENTS } {
+        let event_type = match event.2 {
+            EventType::Begin => 'B',
+            EventType::End => 'E',
+        };
+        let line = format!("{}{}{}\n", event_type, event.0, event.1);
+        file.write_all(line.as_bytes())
+            .expect("Failed to write to file");
     }
 }
