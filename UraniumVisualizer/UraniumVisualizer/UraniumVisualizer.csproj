@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="EventType.cs" />
     <Compile Include="FileParser.cs" />
+    <Compile Include="FunctionRecord.cs" />
     <Compile Include="ProfilerEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
