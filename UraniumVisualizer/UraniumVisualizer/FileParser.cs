@@ -17,7 +17,7 @@ namespace UraniumVisualizer
         ///     Lazily enumerate all profiler events from the file
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ProfilerEvent> Parse()
+        public IEnumerable<FunctionRecord> Parse()
         {
             throw new NotImplementedException();
         }
