@@ -1,6 +1,6 @@
 ﻿namespace UraniumVisualizer
 {
-    partial class Form1
+    partial class VisualizerForm
     {
         /// <summary>
         ///  Required designer variable.
