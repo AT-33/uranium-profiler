@@ -2,12 +2,12 @@
 {
     public class ProfilerEvent
     {
-        public double StartTime { get; }
-        public double EndTime { get; }
+        public double TimeStamp { get; }
+        public EventType Type { get; }
 
-        public ProfilerEvent(double startTime, double endTime)
+        public ProfilerEvent(double timeStamp, EventType type)
         {
-            (StartTime, EndTime) = (startTime, endTime);
+            (Type, TimeStamp) = (type, timeStamp);
         }
     }
 }
