@@ -1,6 +1,8 @@
-﻿namespace UraniumVisualizer
+﻿using System;
+
+namespace UraniumVisualizer
 {
-    public class ProfilerEvent
+    public readonly struct ProfilerEvent
     {
         public double TimeStamp { get; }
         public EventType Type { get; }
