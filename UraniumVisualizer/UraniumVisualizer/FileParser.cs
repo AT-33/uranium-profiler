@@ -19,11 +19,15 @@ namespace UraniumVisualizer
 
         private static EventType GetEventType(char c)
         {
-            if (c == 'B')
-                return EventType.Start;
-            if (c == 'E')
-                return EventType.End;
-            throw new SystemException("Could not determine the type of event");
+            switch (c)
+            {
+                case 'B':
+                    return EventType.Start;
+                case 'E':
+                    return EventType.End;
+                default:
+                    throw new SystemException("Could not determine the type of event");
+            }
         }
 
         /// <summary>
@@ -36,8 +40,6 @@ namespace UraniumVisualizer
 
             using (var f = new StreamReader(FileName))
             {
-                var functionPosition = 0;
-
                 while (!f.EndOfStream)
                 {
                     var str = f.ReadLine();
@@ -45,34 +47,20 @@ namespace UraniumVisualizer
                     var timeStampPE = int.Parse(Regex.Match(str, @"\d+").Value);
                     var typePE = GetEventType(str[0]);
                     var pe = new ProfilerEvent(timeStampPE, typePE);
+                    var functionName = Regex.Match(str.Substring(1), @"\D+").Value;
 
                     if (stack.Count == 0 || pe.Type == EventType.Start)
                     {
+                        yield return new FunctionRecord(functionName, stack.Count,
+                                                        pe.TimeStamp/*, double.PositiveInfinity*/);
                         stack.Push(pe);
-                        var functionName = Regex.Match(str.Substring(1), @"\D+").Value;
-                        yield return new FunctionRecord(functionName, functionPosition, pe.TimeStamp);
-                        functionPosition++;
                     }
                     else
                     {
-                        stack.Pop();
-                        functionPosition--;
+                        //double duration = pe.TimeStamp - stack.Peek().TimeStamp;
+                        yield return new FunctionRecord(functionName, stack.Count,
+                                                        stack.Pop().TimeStamp/*, duration*/);
                     }
-                }
-            }
-        }
-
-        public void Test()
-        {
-            using (var fstream = new FileStream(@"H:\GitH\uranium-profiler\UraniumVisualizer\UraniumVisualizer\ParserTests\testReturn.txt",
-                                                FileMode.OpenOrCreate))
-            {
-                foreach (var e in Parse())
-                {
-                    var arr = System.Text
-                        .Encoding.Default
-                        .GetBytes($"Name: {e.Name}\n    PositionX: {e.PositionX}, PositionY: {e.PositionY}\n\n");
-                    fstream.Write(arr, 0, arr.Length);
                 }
             }
         }
