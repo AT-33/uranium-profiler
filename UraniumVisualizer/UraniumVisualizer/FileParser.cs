@@ -52,14 +52,14 @@ namespace UraniumVisualizer
                     if (stack.Count == 0 || pe.Type == EventType.Start)
                     {
                         yield return new FunctionRecord(functionName, stack.Count,
-                                                        pe.TimeStamp/*, double.PositiveInfinity*/);
+                                                        pe.TimeStamp, double.PositiveInfinity);
                         stack.Push(pe);
                     }
                     else
                     {
-                        //double duration = pe.TimeStamp - stack.Peek().TimeStamp;
+                        var duration = pe.TimeStamp - stack.Peek().TimeStamp;
                         yield return new FunctionRecord(functionName, stack.Count,
-                                                        stack.Pop().TimeStamp/*, duration*/);
+                                                        stack.Pop().TimeStamp, duration);
                     }
                 }
             }

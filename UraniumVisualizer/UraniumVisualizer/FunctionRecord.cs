@@ -11,11 +11,13 @@ namespace UraniumVisualizer
         public string Name { get; }
         public int PositionY { get; }
         public double PositionX { get; }
-        public FunctionRecord(string name, int y, double x)
+        public double Duration { get; }
+        public FunctionRecord(string name, int y, double x, double d)
         {
             Name = name;
             PositionY = y;
             PositionX = x;
+            Duration = d;
         }
     }
 }
