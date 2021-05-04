@@ -1,2 +1,2 @@
-Name: test_name, PositionX: 8, PositionY: 0, Duration: ?
+Name: test_name, PositionX: 8, PositionY: 0, Duration: ∞
 Name: test_name, PositionX: 8, PositionY: 0, Duration: 1014506

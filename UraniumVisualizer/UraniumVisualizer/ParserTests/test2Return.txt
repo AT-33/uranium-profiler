@@ -1,6 +1,0 @@
-Name: a, PositionX: 1, PositionY: 0, Duration: ?
-	Name: b, PositionX: 20, PositionY: 1, Duration: ?
-	Name: b, PositionX: 20, PositionY: 1, Duration: 10
-Name: a, PositionX: 1, PositionY: 0, Duration: 39
-Name: c, PositionX: 50, PositionY: 0, Duration: ?
-Name: c, PositionX: 50, PositionY: 0, Duration: 10
