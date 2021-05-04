@@ -58,7 +58,7 @@ namespace UraniumVisualizer
                     else
                     {
                         var duration = pe.TimeStamp - stack.Peek().TimeStamp;
-                        yield return new FunctionRecord(functionName, stack.Count,
+                        yield return new FunctionRecord(functionName, stack.Count - 1,
                                                         stack.Pop().TimeStamp, duration);
                     }
                 }
