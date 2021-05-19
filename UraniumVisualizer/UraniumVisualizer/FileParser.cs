@@ -51,8 +51,8 @@ namespace UraniumVisualizer
 
                     if (stack.Count == 0 || pe.Type == EventType.Start)
                     {
-                        yield return new FunctionRecord(functionName, stack.Count,
-                                                        pe.TimeStamp, double.PositiveInfinity);
+                        //yield return new FunctionRecord(functionName, stack.Count,
+                         //                               pe.TimeStamp, double.PositiveInfinity);
                         stack.Push(pe);
                     }
                     else
