@@ -42,17 +42,14 @@ namespace UraniumVisualizer
             {
                 while (!f.EndOfStream)
                 {
-                    var str = f.ReadLine();
-                    //PE, pe - ProfilerEvent
-                    var timeStampPE = int.Parse(Regex.Match(str, @"\d+").Value);
-                    var typePE = GetEventType(str[0]);
-                    var pe = new ProfilerEvent(timeStampPE, typePE);
+                    var str = f.ReadLine() ?? "";
+                    var eventTimeStamp = int.Parse(Regex.Match(str, @"\d+").Value);
+                    var eventType = GetEventType(str[0]);
+                    var pe = new ProfilerEvent(eventTimeStamp, eventType);
                     var functionName = Regex.Match(str.Substring(1), @"\D+").Value;
 
                     if (stack.Count == 0 || pe.Type == EventType.Start)
                     {
-                        //yield return new FunctionRecord(functionName, stack.Count,
-                         //                               pe.TimeStamp, double.PositiveInfinity);
                         stack.Push(pe);
                     }
                     else

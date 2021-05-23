@@ -25,14 +25,23 @@ fn test_add_event() {
     assert!((delta_time - time_sleep * 1000).abs() < 20000);
 }
 
+fn factorial(x: f64) -> f64 {
+    profiler_event("test_name", EventType::Begin);
+
+    let f = match x {
+        0.0..=1.0 => 1.0,
+        _ => x * factorial(x - 1),
+    };
+    profiler_event("test_name", EventType::End);
+    f
+}
+
 #[test]
 fn test_save_session() {
     initialize_profiler();
     unsafe { EVENTS.clear(); }
 
-    profiler_event("test_name", EventType::Begin);
-    std::thread::sleep(Duration::from_millis(1000 as u64));
-    profiler_event("test_name", EventType::End);
+    factorial(10.0);
 
     save_current_session();
 }
