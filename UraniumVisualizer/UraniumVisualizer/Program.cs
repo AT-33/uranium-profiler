@@ -13,7 +13,7 @@ namespace UraniumVisualizer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new VisualizerForm());
+            //Application.Run(new VisualizerForm());
         }
     }
 }

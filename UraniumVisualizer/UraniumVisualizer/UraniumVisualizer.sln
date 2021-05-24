@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UraniumVisualizer", "UraniumVisualizer.csproj", "{2F46A128-C44E-4B86-8DE3-CB59F9E2A452}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfVisualizer", "WpfVisualizer\WpfVisualizer.csproj", "{54BEEE5A-3351-4313-9D41-B1F7DE0B3783}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2F46A128-C44E-4B86-8DE3-CB59F9E2A452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F46A128-C44E-4B86-8DE3-CB59F9E2A452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F46A128-C44E-4B86-8DE3-CB59F9E2A452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54BEEE5A-3351-4313-9D41-B1F7DE0B3783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54BEEE5A-3351-4313-9D41-B1F7DE0B3783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54BEEE5A-3351-4313-9D41-B1F7DE0B3783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54BEEE5A-3351-4313-9D41-B1F7DE0B3783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

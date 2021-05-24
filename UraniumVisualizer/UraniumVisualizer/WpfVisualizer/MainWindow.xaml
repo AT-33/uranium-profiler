@@ -1,0 +1,164 @@
+﻿<Window x:Class="WpfVisualizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vf="clr-namespace:UraniumVisualizer;assembly=UraniumVisualizer"
+        xmlns:local="clr-namespace:WpfVisualizer" mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" WindowState="Maximized" MinWidth="800" MinHeight="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" Click="OpenFile_OnClick" />
+                <MenuItem Header="_Reload" Click="Reload_OnClick" />
+                <Separator />
+                <MenuItem Header="_Exit" Click="Exit_OnClick" />
+            </MenuItem>
+        </Menu>
+        <DockingManager Grid.Row="1"
+            AllowMixedOrientation="True"
+            AutoWindowSizeWhenOpened="True"
+            IsVirtualizingAnchorable="True"
+            IsVirtualizingDocument="True">
+            <DockingManager.Theme>
+                <Vs2013DarkTheme />
+            </DockingManager.Theme>
+            <DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                        <TextBlock Text="{Binding Path =Title}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </DataTemplate>
+            </DockingManager.DocumentHeaderTemplate>
+            <LayoutRoot>
+                <LayoutPanel Orientation="Vertical">
+                    <LayoutDocumentPaneGroup>
+                        <LayoutDocumentPane>
+                            <LayoutDocument
+                                Title="Threads"
+                                ContentId="threads">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="40" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border BorderThickness="1" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0"
+                                            CornerRadius="10,10,10,10" Background="#545353"
+                                            Margin="2" />
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 20 0"
+                                               Text="{Binding Source={x:Static
+                                        local:MainWindow.CurrentFileName}}" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" FontSize="16" Foreground="White" />
+                                    <TextBox Grid.Row="0" Grid.Column="2" x:Name="SearchTermTextBox" Foreground="White"
+                                             Background="#2D2D30" VerticalContentAlignment="Center"
+                                             Margin="10 5" Padding="10 0" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" IsHitTestVisible="False"
+                                               Text="Type function name to find..." VerticalAlignment="Center"
+                                               Margin="20 2" Foreground="DarkGray">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Text, ElementName=SearchTermTextBox}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Grid.Column="0" Grid.Row="1" Foreground="White" FontSize="16"
+                                               Margin="20 20 20 20" Text="Main Thread" />
+                                    <Rectangle Grid.Column="1" Grid.Row="1" Fill="#535353" />
+                                    <WindowsFormsHost Grid.Column="1" Grid.Row="1" Name="Host" Margin="3">
+                                        <vf:VisualizerForm Name="VisualizerInstance"
+                                                           SelectionChanged="VisualizerForm_OnSelectionChanged" />
+                                    </WindowsFormsHost>
+                                </Grid>
+                            </LayoutDocument>
+                        </LayoutDocumentPane>
+                    </LayoutDocumentPaneGroup>
+                    <LayoutDocumentPaneGroup>
+                        <LayoutDocumentPane>
+                            <LayoutDocument Title="Function Tree" ContentId="functionTree">
+                                <TreeView x:Name="FunctionTreeView" Background="Transparent">
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}"
+                                                                  d:DataContext="{d:DesignInstance local:FunctionNode}">
+                                            <Grid Background="Transparent" d:DataContext="{d:DesignInstance local:FunctionNode}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition MaxWidth="{Binding Path=Info.TotalWidth}" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                    <Rectangle Margin="0"
+                                                        Width="{Binding Path=Info.SelfWidth}"
+                                                               Height="20" Fill="BlueViolet" />
+                                                    <Rectangle Margin="0"
+                                                                Width="{Binding Path=Info.ChildWidth}"
+                                                                Height="20" Fill="DarkGreen" />
+                                                </StackPanel>
+                                                <TextBlock  Grid.Column="0" Margin="5" TextAlignment="Left"
+                                                            Foreground="White" FontSize="14"
+                                                            Text="{Binding Path=Info.SelfMs}" />
+                                                <TextBlock  Grid.Column="0" Margin="5" TextAlignment="Right"
+                                                            Foreground="White" FontSize="14"
+                                                            Text="{Binding Path=Info.TotalMs}" />
+                                                <TextBlock Grid.Column="1"
+                                                            Text="{Binding Path=Info.Name}"
+                                                            Background="Transparent" Foreground="White" Margin="5"
+                                                            FontSize="16" />
+                                            </Grid>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </LayoutDocument>
+                        </LayoutDocumentPane>
+                        <LayoutDocumentPane>
+                            <LayoutDocument Title="Functions" ContentId="functions">
+                                <ListView Foreground="White" Background="Transparent"
+                                          Name="Functions" IsHitTestVisible="False"
+                                          d:DataContext="{d:DesignInstance local:FunctionInfo}">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">
+                                                FUNCTION
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=CallstackIndex}">
+                                                #
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=SelfPercent}" Width="100">
+                                                SELF %
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=SelfMs}">
+                                                 SELF(MS)
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=TotalMs}">
+                                                TOTAL(MS)
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=MaxMs}">
+                                                MAX(MS)
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Count}">
+                                                COUNT
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </LayoutDocument>
+                        </LayoutDocumentPane>
+                    </LayoutDocumentPaneGroup>
+                </LayoutPanel>
+            </LayoutRoot>
+        </DockingManager>
+    </Grid>
+</Window>

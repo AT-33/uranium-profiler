@@ -4,12 +4,13 @@ namespace UraniumVisualizer
 {
     public readonly struct ProfilerEvent
     {
+        public string Name { get; }
         public double TimeStamp { get; }
         public EventType Type { get; }
 
-        public ProfilerEvent(double timeStamp, EventType type)
+        public ProfilerEvent(string name, double timeStamp, EventType type)
         {
-            (Type, TimeStamp) = (type, timeStamp);
+            (Type, TimeStamp, Name) = (type, timeStamp, name);
         }
     }
 }

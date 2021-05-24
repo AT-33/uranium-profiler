@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace UraniumVisualizer
 {
@@ -17,11 +18,11 @@ namespace UraniumVisualizer
 
         private double SecondsPerPixel => secondsVisible / screenWidth;
 
-        private double LeftSeconds => leftOffset - 0.5 * secondsVisible;
-        private double RightSeconds => LeftSeconds + secondsVisible;
+        public double LeftSeconds => leftOffset - 0.5 * secondsVisible;
+        public double RightSeconds => LeftSeconds + secondsVisible;
 
-        private double LeftPixels => LeftSeconds / SecondsPerPixel;
-        private double RightPixels => RightSeconds / SecondsPerPixel;
+        public double LeftPixels => LeftSeconds / SecondsPerPixel;
+        public double RightPixels => RightSeconds / SecondsPerPixel;
 
         private double TopPixels { get; set; }
         private double BottomPixels => TopPixels + screenHeight;
@@ -29,44 +30,63 @@ namespace UraniumVisualizer
         private List<FunctionRectangle> cachedRectangles;
         private List<FunctionRecord> parsingResults;
 
+        public double SecondsToPixels(double seconds)
+        {
+            return (seconds - LeftSeconds) / SecondsPerPixel;
+        }
+
         public FunctionRectangle? SelectedFunction { get; private set; }
+        public Dictionary<string, (int count, double maxTime)> FunctionData => parser?.FunctionData;
 
         public void OpenSessionFile(string filePath)
         {
             parser = new FileParser(filePath);
             parsingResults = parser.Parse().ToList();
+            secondsVisible = parsingResults.Last().PositionX + parsingResults.Last().Duration
+                             - parsingResults.First().PositionX;
+            leftOffset = secondsVisible * 0.5;
+            if (LeftSeconds < 0)
+                leftOffset -= LeftSeconds;
+            cachedRectangles = null;
         }
 
         public void ResizeScreen(int width, int height)
         {
             (screenWidth, screenHeight) = (width, height);
+            if (LeftSeconds < 0)
+                leftOffset -= LeftSeconds;
         }
 
         public IEnumerable<FunctionRectangle> GetRectangles()
         {
-            cachedRectangles = cachedRectangles ?? UpdateRectangles();
+            cachedRectangles = cachedRectangles ?? UpdateRectangles().ToList();
+
             return cachedRectangles
-                .Where(r => r.Left <= RightPixels || r.Right >= LeftPixels)
-                .Where(r => r.Top <= BottomPixels || r.Bottom >= TopPixels);
+                .Where(f => f.Width > 1)
+                .Where(f => f.Left <= RightPixels || f.Right >= LeftPixels)
+                .Where(f => f.Top <= BottomPixels || f.Bottom >= TopPixels);
         }
 
         public void ApplyZooming(double factor)
         {
-            secondsVisible = factor < 0
-                ? secondsVisible * -factor
-                : secondsVisible / factor;
+            secondsVisible *= factor;
+            if (LeftSeconds < 0)
+                leftOffset -= LeftSeconds;
             cachedRectangles = null;
         }
 
         public void ApplyMoving(int factorX, int factorY)
         {
             leftOffset -= factorX * SecondsPerPixel;
+            if (LeftSeconds < 0)
+                leftOffset -= LeftSeconds;
             cachedRectangles = null;
         }
 
         public void SelectFunctionUnderCursor(int x, int y)
         {
             SelectedFunction = cachedRectangles
+                .AsParallel()
                 .FirstOrDefault(r => x >= r.Left && x <= r.Right && y >= r.Top && y <= r.Bottom);
         }
 
@@ -75,13 +95,35 @@ namespace UraniumVisualizer
             SelectedFunction = null;
         }
 
-        private List<FunctionRectangle> UpdateRectangles()
+        public List<FunctionRecord> GetAllSubFunctions(FunctionRecord record)
         {
-            if (SelectedFunction != null)
+            var parent = null as FunctionRectangle?;
+            var result = new List<FunctionRecord>();
+            foreach (var rectangle in (cachedRectangles as IEnumerable<FunctionRectangle>).Reverse())
+            {
+                if (rectangle.Record == record)
+                    parent = rectangle;
+                if (!parent.HasValue) continue;
+                if (rectangle.Left >= parent.Value.Left)
+                    result.Add(rectangle.Record);
+                else
+                    break;
+            }
+
+            return result;
+        }
+
+        private IEnumerable<FunctionRectangle> UpdateRectangles()
+        {
+            if (SelectedFunction?.Record != null)
                 SelectedFunction = TransformFunction(SelectedFunction.Value.Record);
-            return parsingResults
-                .Select(TransformFunction)
-                .ToList();
+            if (parsingResults is null)
+                yield break;
+
+            foreach (var rectangle in parsingResults)
+            {
+                yield return TransformFunction(rectangle);
+            }
         }
 
         private FunctionRectangle TransformFunction(FunctionRecord r)
