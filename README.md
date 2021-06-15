@@ -36,6 +36,7 @@
   2) Запустить визуализатор (установка визуализатора не требуется).
   
 **Структура приложения в [alpha-релизе](https://github.com/AT-33/uranium-profiler/releases/tag/v0.1-alpha):**  
-  /UraniumVisualizer.dll - подключаемая библиотека профилировщика  
-  /WpfVisualizer.exe - приложение, визуализирующее данные, полученные библиотекой
-  /AvalonDock.Themes.VS2013.dll, /AvalonDock.dll - библиотеки необходимые для работы визуализатора
+  /Release/UraniumVisualizer.dll - подключаемая библиотека профилировщика  
+  /Release/WpfVisualizer.exe - приложение, визуализирующее данные, полученные библиотекой  
+  /Release/AvalonDock.dll, AvalonDock.Themes.VS2013.dll - библиотеки необходимые для работы визуализатора  
+  /uranium session \[24 05 2021 - 01.05.18].ups - пример log-файла после профилирования программы  
