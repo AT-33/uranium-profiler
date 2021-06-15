@@ -37,5 +37,5 @@
   
 **Структура приложения в [alpha-релизе](https://github.com/AT-33/uranium-profiler/releases/tag/v0.1-alpha):**  
   /UraniumVisualizer.dll - подключаемая библиотека профилировщика  
-  /WpfVisualizer.exe - приложение, визуализирующее данные, полученные библиотекой Profiler.rs
+  /WpfVisualizer.exe - приложение, визуализирующее данные, полученные библиотекой
   /AvalonDock.Themes.VS2013.dll, /AvalonDock.dll - библиотеки необходимые для работы визуализатора
