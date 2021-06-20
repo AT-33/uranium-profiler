@@ -1,4 +1,6 @@
-﻿namespace UraniumVisualizer
+﻿using System.Windows.Forms;
+
+namespace UraniumVisualizer
 {
     partial class VisualizerForm
     {
@@ -30,17 +32,17 @@
         private void InitializeComponent()
         {
             this.SuspendLayout();
+            
             // 
             // VisualizerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            // this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            // this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(900, 500);
+            this.MinimumSize = new System.Drawing.Size(916, 539);
             this.Name = "VisualizerForm";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.VisualizerForm_Load);
             this.ResumeLayout(false);
-
         }
 
         #endregion
